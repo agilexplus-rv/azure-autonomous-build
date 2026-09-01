@@ -1,0 +1,55 @@
+---
+description: Building or operating production software autonomously on Azure (Container Apps, PostgreSQL, Blob with malware scanning, Key Vault, Event Grid) with Cloudflare DNS and Stripe. Orchestration, adversarial gates, the no-stubs contract, and the deployment/security traps.
+globs:
+alwaysApply: false
+---
+
+# Autonomous builds on Azure
+
+Canonical content: `.cursor/skills/azure-autonomous-build/SKILL.md` and its `reference/` tree.
+**Read `SKILL.md` before starting a sprint.** Do not fork the content into this file — two copies
+of the same rules drifting apart is a failure this skill exists to prevent.
+
+Set `alwaysApply: true` above if you want this loaded on every request.
+
+## The ten that matter most
+
+1. **Every sprint has ONE falsifiable Sprint Goal, written as an exit test.** "Payments are
+   implemented" cannot fail; "a replayed webhook produces exactly one transition and one payment
+   row" can. The loop ends when that goal is green on a squash-merged PR.
+
+2. **ONE slice owns the integration point** — the route, the mount, the wiring — runs LAST against
+   merged main, and its exit test walks the real journey with no hand-constructed URL. Features
+   have shipped complete, CI-green and unreachable four times. Assume a fifth.
+
+3. **Gates fan out**: N verifiers over disjoint areas, then one synthesiser. Verifiers find; they
+   do not fix. **The synthesiser must downgrade any claimed PASS whose evidence could not have
+   failed** — a dev-mode check for a production-only defect, a test asserting the absence of an
+   error string, a permission check run as the database owner.
+
+4. **A missing agent report is UNVERIFIED, never a pass.** Silence must not read as success.
+
+5. **Reproduce on a production build.** Dev mode hid a CSP defect that broke every client-side
+   navigation in the app.
+
+6. **Verify state, never output.** A pipeline's exit status is the LAST command's, so
+   `deploy.sh … | tail` reports 0 on a failed deploy. Query the control plane, the database, the
+   endpoint.
+
+7. **Every route registers in the release/feature gate**, or it is a 404 indistinguishable from a
+   route that was never written. **Every DB write needs a COLUMN-SCOPED grant** — a table-level
+   check passes while the columns actually written are ungranted.
+
+8. **Deploy only through the wrapper script, always with the image parameter.** A raw cloud-CLI
+   deployment silently skips gated app resources and reports success. Deploy once per phase,
+   before each gate, never into an in-flight CI run.
+
+9. **Uploads:** provider-native malware scanning proven with a real EICAR file; content sniffing
+   never extension; short-lived permission-checked signed URLs with attachment disposition from a
+   private per-record namespace; managed identity, never account keys.
+
+10. **Never rename the required aggregating CI check** — it blocks every PR in the repository. And
+    don't merge while parallel agents hold open PRs: with up-to-date-branch protection, every
+    merge puts the others behind at the cost of a rebase and a full CI pass.
+
+When something breaks, check `reference/failure-signatures.md` before diagnosing from scratch.
