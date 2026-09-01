@@ -28,6 +28,7 @@ reference/gates.md                verifier splits, synthesiser prompt, verdict s
 reference/azure.md                estate, parameterisation, preflight, deployment traps
 reference/security.md             malware scanning, signed URLs, grants, CSP, secrets
 reference/failure-signatures.md   symptom → real cause index
+reference/handover.md             custody handover, off-boarding, restore drill, teardown
 adapters/                         how to load it in each harness
 ```
 

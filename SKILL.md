@@ -293,6 +293,9 @@ configuration, never a literal, and fail the build on any live key reaching the 
 - Record decisions **with their reasoning, at the moment they are taken**. A decision whose *why*
   is lost gets relitigated or silently reversed.
 - Write the state file for a **cold start** — assume the reader has no memory of the session.
+- Handing the system to its owners is a separate exercise from a cold start, with its own exit
+  test and its own off-boarding. See `reference/handover.md` — and settle domain, payment-account
+  and repository ownership at the START of the build, not at the end.
 
 ---
 
@@ -300,7 +303,8 @@ configuration, never a literal, and fail the build on any live key reaching the 
 
 - `reference/orchestration.md` — sprint script skeleton, parallelism, worktrees
 - `reference/gates.md` — verifier area splits, synthesiser prompt, schemas
-- `reference/azure.md` — estate, parameterisation, preflight, deploy, teardown
+- `reference/azure.md` — estate, parameterisation, preflight, deploy, client-tenant access
 - `reference/security.md` — malware scanning, SAS, grants, CSP, secrets
 - `reference/failure-signatures.md` — symptom → real cause index
+- `reference/handover.md` — custody handover, access off-boarding, restore drill, teardown
 - `adapters/` — how to load this in Claude Code, Cursor and Hermes
