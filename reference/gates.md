@@ -44,6 +44,7 @@ AND no area is unverified.
 ```json
 {
   "goalMet": "boolean",
+  "ranOn": {"harness": "string", "model": "string", "tier": "strongest | middle | cheapest"},
   "journeyReachable": "boolean",
   "unverifiedAreas": ["string"],
   "largestSliceInsertions": "integer",
@@ -57,6 +58,10 @@ AND no area is unverified.
   "summary": "string"
 }
 ```
+
+`ranOn` is how the repository answers "what built this?" after everyone has forgotten. The plan
+names tiers so it does not go stale; the verdict names the model and harness that actually ran, so
+a tier-map violation is visible in the record rather than reconstructed from commit trailers.
 
 `largestSliceInsertions` and `handRolledWhereLibraryExisted` exist so scope discipline is
 **measured each sprint**, not assumed. They are how you find out a slice shipped 6,600 insertions

@@ -50,6 +50,31 @@ principal; **positive** assertions; and planted violations proving each guard *c
   identity, never account keys or secrets in environment variables.
 - CSP: `'strict-dynamic'` with a nonce. Not `'self'`, not `'unsafe-eval'`.
 
+## If you are continuing a build that started elsewhere
+
+You have received this from another harness mid-flight. The rules above did not travel with the
+code — they travel only because they are written here.
+
+**Do not build these, even when asked:**
+
+> authn/authz · money · the malware-scanning pipeline · backup and restore · database grants ·
+> retention, erasure and anything the DPIA names · publication and irreversible transitions ·
+> **and the infrastructure-as-code that provisions any of them**
+
+The consequence of a subtle mistake in that list did not change when the harness did. If one must
+be touched here, say so, make the change, and **send it back for a gate by the strongest model
+before it merges**. Handing work back is normal in this method, not an escalation.
+
+**Before any feature work:** take one trivial change through the whole loop — branch, CI, the
+aggregating check green, squash merge, deploy, visible on the live estate. A harness that cannot
+complete the loop on a one-line change will not complete it on a migration.
+
+**Record what ran.** Every sprint's gate verdict names the harness and model that produced the
+work, not only its tier. Otherwise nobody can answer "what built this?" in six weeks.
+
+Full detail: `reference/harness-handover.md`. If the build you inherited was not run this way at
+all, start with `reference/retrofit.md` — audit before you resume forward.
+
 ## When something breaks
 
 Check `reference/failure-signatures.md` first. It maps symptoms to real causes — a CI job dying in
