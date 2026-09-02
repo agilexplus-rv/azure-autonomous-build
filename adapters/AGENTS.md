@@ -5,6 +5,25 @@ Canonical content lives in `azure-autonomous-build/SKILL.md` and its `reference/
 it stays useful in a harness that reads only one file. Do not fork the content — two copies of the
 same rules drifting apart is a failure this skill exists to prevent.
 
+## Before you start — ask, do not assume
+
+Whether you were called by name or handed only a repository URL, the first move is the same.
+
+**Establish the ground truth in sixty seconds.** Given a URL, clone read-only into a scratch
+directory and touch nothing on the remote; called by name, read the working directory you are
+already in. Then answer from evidence: how much code exists and how recently; **what built each
+area** (commit co-author trailers, branch names, PR titles); and whether any of it is gated.
+
+**Then put the choice to the operator and wait.** Report what you found in three lines, and ask:
+
+> **1 · Retrofit first** — audit what exists, then plan forward from the real state (one sitting).
+> **2 · Forward, back-gate queued** — plan and build now, with the audit as phase one.
+> **3 · Forward only** — no audit; the acceptance gets recorded in the decision register.
+
+Recommend one with a reason. Empty repository — nothing to audit, go straight to the interview in
+`reference/intake.md`. **Do not begin work while the answer is outstanding**, and do not decide it
+on the operator's behalf.
+
 ## Working method
 
 - **Every sprint has ONE falsifiable Sprint Goal, written as an exit test.** It must be able to

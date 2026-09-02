@@ -17,41 +17,76 @@ reference build before the guards in §3 existed. Assume it will happen to you.
 
 ## 0. Running this skill
 
-This skill **leads** the work. Establish which entry you are at, follow it, and **ask before you
-assume**.
+This skill **leads** — and it leads by asking, not by assuming. **Before anything else it puts one
+question to the operator and waits for the answer.**
 
-| Entry | When | Do this first |
-|---|---|---|
-| **A — from the start** | no code yet | Interview the operator (`reference/intake.md`), then produce the plan: passes, phases, sprints with falsifiable goals, and the tier map. Write no code until the operator has signed off the **pass boundary** and the **tier map**. |
-| **B — mid-way** | work already exists, built with or without this method | **Do not resume forward.** Run the reconstruction audit (`reference/retrofit.md`): what was built, by which model and harness, at which tier, and what was never gated. It ends with the same artefacts as Entry A, plus a back-gate queue that runs first. |
+### Step 1 — establish the ground truth. Sixty seconds, no more
 
-The questions in `reference/intake.md` are the minimum in both entries. An unanswered question is
-a risk logged in the decision register with the assumption written beside it — never a default
-chosen silently.
+| Invoked | Do this |
+|---|---|
+| with a **repository URL** | Clone read-only into a scratch directory. Push nothing, branch nothing, open nothing on the remote. |
+| **by name**, inside a project | Read the working directory you are already in. Change nothing in it. |
 
-Then run the loop (`reference/loop.md`). The gate produces a verdict; **the loop is what consumes
-it.** Gates without the loop are a report nobody acts on.
+Then answer three questions from the evidence rather than from what you were told:
 
-### Invoked with nothing but a repository URL
+1. Does code exist — how much, how recently, how many merged PRs?
+2. **What built each area?** Commit co-author trailers, branch names, PR titles. This is the
+   question a repository is least able to answer later, and the first one that matters.
+3. Is any of it gated, and does a plan or state file exist that names this method?
 
-The commonest entry in practice: an operator pastes a URL and expects the skill to take it from
-there. Do this, in order, and do not skip to the end.
+### Step 2 — ask the operator which way to go
 
-1. **Clone read-only** into a scratch directory. Push nothing, branch nothing, open nothing on the
-   remote until step 5.
-2. **Establish provenance before reading any code** — the log with co-author trailers, the branch
-   list, the merged PR titles. *What built each area* is the question a repository is least likely
-   to be able to answer later, and the first one that matters.
-3. **Choose the entry from the evidence, not from the operator's summary of it.** Code present
-   means Entry B, even when you were told the build has barely started. Then run `retrofit.md`
-   §1–6 end to end.
-4. **Write the audit into the repository's own documentation directory**, back-gate queue first.
-   An audit that lives only in a chat window is not a finding, it is a conversation.
-5. **Open ONE pull request**: the audit, the tier map with model and harness named, and the record
-   fixes. Nothing else. An audit PR that also changes behaviour cannot be reviewed as either.
-6. **Stop and report.** Name the intake questions the repository could not answer, and ask them.
-   The pass boundary, the harness split and any never-delegate exception are the operator's to
-   decide — a skill that guesses them has replaced the operator rather than led them.
+Report what you found in three lines, then put the choice to them. **Never decide it for them,
+and never begin work while the answer is outstanding.**
+
+> I found <n commits, m merged PRs, phases X–Y, last activity D>. <What is gated and what is
+> not.> <What built the never-delegate work — or that the record cannot say.>
+>
+> How do you want to proceed?
+>
+> **1 · Retrofit first** — audit what exists (`retrofit.md`), then plan forward from the real
+> state. One sitting. The right answer when never-delegate work has already shipped, or when the
+> record cannot say what built what.
+>
+> **2 · Forward, back-gate queued** — plan and build from here, with the audit as the first phase
+> rather than as a prerequisite. Keeps momentum without losing the evidence.
+>
+> **3 · Forward only** — plan and build from here, no audit. I will record what that accepts.
+
+Recommend one, in a sentence, with the reason. If the repository is empty there is nothing to
+audit: say so, and go straight to the interview.
+
+### Step 3 — what each answer runs
+
+| Answer | What happens |
+|---|---|
+| **Empty repository** | `intake.md`, then the plan: passes, phases, sprints with falsifiable goals, and the tier map. **No code** until the operator has signed off the pass boundary and the tier map. |
+| **Retrofit first** | `retrofit.md` §1–6 end to end → the audit written into the repository with the back-gate queue at the top → the intake questions the repository could not answer → then the plan. |
+| **Forward, back-gate queued** | `intake.md` and the plan now; the back-gate queue becomes phase one of that plan. The audit still happens — it is sequenced, not skipped. |
+| **Forward only** | `intake.md`, then the plan. **Record the choice first**, as below. |
+
+### If the operator chooses forward only
+
+Write it into the decision register once — dated, attributed, and listing the never-delegate
+categories that have already shipped without a strongest-model gate. Then proceed, and **do not
+re-litigate it every sprint**: an accepted risk raised weekly stops being read.
+
+The word that matters is *accepted*, not *overlooked*. A risk somebody chose is a different object
+from one nobody saw, and only the first survives an incident review.
+
+### Throughout
+
+The questions in `intake.md` are the minimum on every path. An unanswered one is a risk logged in
+the decision register with the assumption written beside it — never a default chosen silently.
+
+Then run the loop (`loop.md`). The gate produces a verdict; **the loop is what consumes it.**
+Gates without the loop are a report nobody acts on.
+
+### Working on the remote
+
+When the audit or the plan is ready, **open ONE pull request** carrying it: the audit, the tier map
+with model and harness named, and the record fixes. Nothing that changes behaviour — an audit PR
+that also changes behaviour cannot be reviewed as either.
 
 **What this skill never does unattended, whatever the invocation says:** merge a pull request,
 delete a branch, change repository or branch-protection settings, deploy, rotate or revoke a
