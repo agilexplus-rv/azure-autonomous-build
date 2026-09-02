@@ -32,6 +32,31 @@ chosen silently.
 Then run the loop (`reference/loop.md`). The gate produces a verdict; **the loop is what consumes
 it.** Gates without the loop are a report nobody acts on.
 
+### Invoked with nothing but a repository URL
+
+The commonest entry in practice: an operator pastes a URL and expects the skill to take it from
+there. Do this, in order, and do not skip to the end.
+
+1. **Clone read-only** into a scratch directory. Push nothing, branch nothing, open nothing on the
+   remote until step 5.
+2. **Establish provenance before reading any code** — the log with co-author trailers, the branch
+   list, the merged PR titles. *What built each area* is the question a repository is least likely
+   to be able to answer later, and the first one that matters.
+3. **Choose the entry from the evidence, not from the operator's summary of it.** Code present
+   means Entry B, even when you were told the build has barely started. Then run `retrofit.md`
+   §1–6 end to end.
+4. **Write the audit into the repository's own documentation directory**, back-gate queue first.
+   An audit that lives only in a chat window is not a finding, it is a conversation.
+5. **Open ONE pull request**: the audit, the tier map with model and harness named, and the record
+   fixes. Nothing else. An audit PR that also changes behaviour cannot be reviewed as either.
+6. **Stop and report.** Name the intake questions the repository could not answer, and ask them.
+   The pass boundary, the harness split and any never-delegate exception are the operator's to
+   decide — a skill that guesses them has replaced the operator rather than led them.
+
+**What this skill never does unattended, whatever the invocation says:** merge a pull request,
+delete a branch, change repository or branch-protection settings, deploy, rotate or revoke a
+credential, or transfer ownership. It prepares each of those, and asks.
+
 ---
 
 ## 1. The shape of the work
