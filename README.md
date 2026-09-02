@@ -23,11 +23,15 @@ drifting apart is the exact failure this skill warns about in §3 — do not for
 
 ```
 SKILL.md                          the spine — read this first
+reference/intake.md               the questions to ask the operator, before anything is built
+reference/loop.md                 the remediation loop, termination, the continuation prompt
+reference/retrofit.md             adopting the method onto work already under way
 reference/orchestration.md        sprint script skeleton, slice prompts, the written record
 reference/gates.md                verifier splits, synthesiser prompt, verdict schema
 reference/azure.md                estate, parameterisation, preflight, deployment traps
 reference/security.md             malware scanning, signed URLs, grants, CSP, secrets
 reference/failure-signatures.md   symptom → real cause index
+reference/harness-handover.md     passing a live build to another tool mid-flight
 reference/handover.md             custody handover, off-boarding, restore drill, teardown
 adapters/                         how to load it in each harness
 ```

@@ -15,14 +15,37 @@ reference build before the guards in §3 existed. Assume it will happen to you.
 
 ---
 
+## 0. Running this skill
+
+This skill **leads** the work. Establish which entry you are at, follow it, and **ask before you
+assume**.
+
+| Entry | When | Do this first |
+|---|---|---|
+| **A — from the start** | no code yet | Interview the operator (`reference/intake.md`), then produce the plan: passes, phases, sprints with falsifiable goals, and the tier map. Write no code until the operator has signed off the **pass boundary** and the **tier map**. |
+| **B — mid-way** | work already exists, built with or without this method | **Do not resume forward.** Run the reconstruction audit (`reference/retrofit.md`): what was built, by which model and harness, at which tier, and what was never gated. It ends with the same artefacts as Entry A, plus a back-gate queue that runs first. |
+
+The questions in `reference/intake.md` are the minimum in both entries. An unanswered question is
+a risk logged in the decision register with the assumption written beside it — never a default
+chosen silently.
+
+Then run the loop (`reference/loop.md`). The gate produces a verdict; **the loop is what consumes
+it.** Gates without the loop are a report nobody acts on.
+
+---
+
 ## 1. The shape of the work
 
 ```
-PASS    a half of the project, defined by the SHAPE of the work, not its size.
-        Pass 1 = spec-fidelity work: many interlocking requirements, held in context,
-                 built outward against a CI gate.
-        Pass 2 = external-signal work: pen test, axe, load profile, translator — each
-                 hands back findings with an oracle OUTSIDE the model.
+PASS    a stretch of the build with ONE owner: one harness, one model tier, one person
+        watching. Its boundary is set by CONSEQUENCE and by WHO CAN VERIFY IT — the same
+        criterion as model pinning below, applied at project scale.
+        Pass 1 = everything whose failure is expensive, silent or irreversible, plus every
+                 interlocking requirement that must be held in one context.
+        Pass 2 = work a second harness can build and a cheaper oracle can verify, AND
+                 external-signal work — pen test, axe, load profile, translator, restore
+                 drill — where the oracle sits outside the model entirely.
+        A pass ENDS at a written handover, never at a date, never where patience ran out.
 PHASE   a coherent capability. Ends with an adversarial gate, not with its last merge.
 SPRINT  one sitting of work with ONE falsifiable Sprint Goal.
 SLICE   3–5 per sprint, each in its own worktree, each owning declared files.
@@ -91,6 +114,44 @@ found by reading it.
 **Hard limit:** never give the cheapest tier a task whose exit condition is "make CI green", or
 anything needing a diagnostic loop. One wrote correct code, correctly refused to merge on red,
 then reported *"cannot diagnose without access to CI logs"* — it never fetched them.
+
+**A harness switch does not lower the consequence, so it does not lower the tier.** Tier is a
+property of the work, never of whoever is holding the keyboard. When the build moves to a second
+harness or a cheaper model, these do not move with it:
+
+> authn/authz · money · the malware-scanning pipeline · backup and restore · database grants ·
+> retention, erasure and anything the DPIA names · publication and irreversible transitions ·
+> **and the infrastructure-as-code that provisions any of them**
+
+Work on that list which the second harness must touch comes back for a gate by the strongest
+model **before merge** — building it there is not the same as gating it there. See
+`reference/harness-handover.md`.
+
+**Name tiers in the plan; record the model and harness that actually ran, per sprint, in the gate
+verdict.** A plan naming models goes stale as the roster changes — but a record naming only tiers
+cannot answer *"what built the malware-scanning template?"* six weeks later, and that question
+always gets asked. One build named tiers everywhere and models nowhere, for good stated reasons,
+and the answer had to be reconstructed from commit trailers.
+
+---
+
+### The Pass 1 exit bar
+
+"Almost ready for production" is a feeling, not a bar. These are falsifiable:
+
+1. The journey a real user takes runs end to end **on the deployed estate**, with no
+   hand-constructed URLs.
+2. Every never-delegate category above is **built and gated** — not scheduled, not stubbed.
+3. A fresh install into a foreign tenant, from the written guide alone, succeeds (`azure.md`).
+4. The `verify` contract is green **and every guard has been proved able to fail**.
+5. No requirement is marked done out of an ungated sprint.
+6. No blocker-severity finding is open, and every UNVERIFIED area is named together with what
+   would settle it.
+
+The operator will want to stop early — every build reaches a point where the remaining work looks
+cheaper than it is. What remains is then **re-tiered explicitly** and written into the handover as
+work the next harness may not do alone. That conversation costs a paragraph while the plan is
+being written, and a phase afterwards.
 
 ---
 
@@ -301,10 +362,14 @@ configuration, never a literal, and fail the build on any live key reaching the 
 
 ## 8. Reference
 
+- `reference/intake.md` — the questions to ask the operator before anything is built
+- `reference/loop.md` — the remediation loop, termination, the continuation prompt
 - `reference/orchestration.md` — sprint script skeleton, parallelism, worktrees
 - `reference/gates.md` — verifier area splits, synthesiser prompt, schemas
 - `reference/azure.md` — estate, parameterisation, preflight, deploy, client-tenant access
 - `reference/security.md` — malware scanning, SAS, grants, CSP, secrets
 - `reference/failure-signatures.md` — symptom → real cause index
+- `reference/harness-handover.md` — passing a live build to another tool mid-flight
+- `reference/retrofit.md` — adopting the method onto work already under way
 - `reference/handover.md` — custody handover, access off-boarding, restore drill, teardown
 - `adapters/` — how to load this in Claude Code, Cursor and Hermes
