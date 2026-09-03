@@ -25,6 +25,27 @@ handshake cannot complete, the subscription is never created, and **no verdict c
 however correctly scanning was configured**. Also: a `visibility` guard meant to hide unscanned
 documents from reviewers was dead code, imported by nothing.
 
+**Trust the blob, never the event.** A scan-result event carries no per-payload signature the way
+a payment webhook does. Do not stand up a shared-secret header or an app registration for it —
+instead, use the event **only** to learn which blob to check, then re-read the verdict from that
+blob's **own index tag**, through the application's already-granted managed-identity access. Never
+branch on the event's own claimed result field. The worst a forged POST can do is make the
+application re-check a blob it already owns and get back the same real answer — a stronger
+property than a signature gives, because a signature proves the payload was not altered in
+transit, not that its claimed content is still current. Two supporting checks, both cheap: the
+delivery-type header the provider sets itself, and (where the provider supports it) the
+subscription name on the notification, matched against the one the template actually created — an
+unconfigured expected name refuses everything rather than silently trusting an unset check.
+
+**The result-apply step must survive being run twice.** The event service's own retry policy
+guarantees a duplicate delivery eventually happens. Re-derive the verdict from the blob tag on
+every delivery rather than trusting a stored copy (a duplicate then reads as "unchanged", not
+re-processed); gate the database write on the row's *current* value already matching (a second
+identical write is then a no-op); and fire any notification only on the *transition into* the
+terminal state, read before the write — never on a redelivery that finds the record already
+there. Untested, this class of bug reads as "works in the demo" (one delivery, no retries) and
+fails the first time the provider actually retries.
+
 ## Accepting files
 
 - **Content sniffing, never extension or client `Content-Type`.** Use a maintained library. The
