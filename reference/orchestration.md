@@ -71,6 +71,44 @@ it over-applied a "no external dependencies" requirement that was about the land
 fetching third-party *runtime* assets, and said nothing about build-time dependencies. Say that
 distinction explicitly; agents get it wrong.
 
+### What the ceiling counts
+
+State it, or the ceiling is decoration. The figure counts **code and configuration** — application
+code, migrations, infrastructure templates, scripts, workflow files, catalogues. It excludes tests,
+guard fixtures, generated documentation and gate transcripts, which are where thoroughness is
+*supposed* to go. Every slice reports **both** numbers, the counted figure and the total, so the
+gate can see the split rather than guess at it.
+
+This is not pedantry. On one build, six of eleven slices across two sprints breached the ceiling as
+originally written, and every one of them breached it on tests and transcripts. **A ceiling
+breached every sprint constrains nothing** — it only trains everyone to ignore the number.
+
+### Reserve migration numbers for the fix rounds
+
+Pre-assigning a migration number per slice stops two agents colliding during the build. Then the
+first fix round needs a schema change, and every number has already been claimed by a slice.
+Reserve two per sprint, named in the sprint script beside the slice assignments. It costs nothing
+and removes a collision that always arrives at the worst moment.
+
+## Branching for parallel slices
+
+Two levels are the obvious arrangement and the expensive one: slices merge to main, and with
+up-to-date-branch protection **every merge puts every other open PR behind**, costing each a rebase
+and a full CI pass. On a five-slice sprint that is paid four times over.
+
+Three levels remove it:
+
+| Level | Branch | Merges into | When |
+|---|---|---|---|
+| Slice | `slice/<phase>.<sprint>-<key>` | the phase branch | squash, on green CI, inside the sprint |
+| Phase | `phase/<n>-<name>` | `main` | squash, once the **phase gate** returns `goalMet` |
+| — | `main` | — | never committed to directly |
+
+Every slice PR still runs the full contract and still waits for the aggregating check, so "a PR and
+a gate for every sprint" stays literally true — but main moves once per phase instead of once per
+slice, and the integration-owning slice runs last against the merged *phase* branch rather than
+against a main shifting underneath it.
+
 ## The written record — three files, three jobs
 
 | File | Written by | Holds |
@@ -78,6 +116,7 @@ distinction explicitly; agents get it wrong.
 | progress/state | **the gate only** | checkpoint for a cold start, decision register, specification gaps, findings log |
 | traceability | each slice, **its own IDs only** | requirement → files → at least one test |
 | efficiency log | whoever learns the lesson | measured fixes with before/after — not a diary |
+| amendments | whoever agrees the change with the operator | **specification changes, kept apart from progress** — what changed, who agreed it, when. A spec edited in place loses the fact that it was ever different, and with it every argument already settled |
 
 The checkpoint is written assuming the reader has no memory of the session, and ends with a
 literal "Resume by saying…" line. That is what makes an interrupted run recoverable rather than
