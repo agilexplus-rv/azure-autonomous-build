@@ -27,6 +27,14 @@ question to the operator and waits for the answer.**
 | with a **repository URL** | Clone read-only into a scratch directory. Push nothing, branch nothing, open nothing on the remote. |
 | **by name**, inside a project | Read the working directory you are already in. Change nothing in it. |
 
+**Audit the authoritative tree, not the one in front of you.** Fetch before you read, compare the
+working directory against its remote, and when there is more than one remote **ask which is
+authoritative** — a mirror, a legacy origin and a fork all answer "what was built here?"
+differently. A local checkout tens of commits behind produces an audit that is confident, tidy and
+about a repository that no longer exists. This is not hypothetical: it is the most recent way this
+method produced a wrong answer, and the wrong answer was about who had built the security-critical
+work.
+
 Then answer three questions from the evidence rather than from what you were told:
 
 1. Does code exist — how much, how recently, how many merged PRs?

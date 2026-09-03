@@ -45,6 +45,7 @@ AND no area is unverified.
 {
   "goalMet": "boolean",
   "ranOn": {"harness": "string", "model": "string", "tier": "strongest | middle | cheapest"},
+  "strongestModelReview": {"required": "boolean", "ran": "boolean", "evidence": "string"},
   "journeyReachable": "boolean",
   "unverifiedAreas": ["string"],
   "largestSliceInsertions": "integer",
@@ -58,6 +59,19 @@ AND no area is unverified.
   "summary": "string"
 }
 ```
+
+`strongestModelReview` is how a back-gate stops being a habit. `required` is true whenever the
+sprint touched a never-delegate category — authn/authz, money, the malware pipeline, backup and
+restore, grants, retention and anything the DPIA names, publication and irreversible transitions,
+or the infrastructure that provisions them. **`required` and not `ran` is a blocker-severity
+finding**, not a note.
+
+This exists because of how the discipline actually failed. On one build a second harness did the
+building and the strongest model reviewed it, phase after phase, with `Fable security review`
+committed each time — and then, between two phases, it simply stopped. Nothing failed and nothing
+flagged; the habit lapsed. The phase that followed carried subject-access export, erasure,
+retention, database restore and the audit log, and went through a product gate only. A discipline
+nobody records is a discipline nobody can notice the end of.
 
 `ranOn` is how the repository answers "what built this?" after everyone has forgotten. The plan
 names tiers so it does not go stale; the verdict names the model and harness that actually ran, so

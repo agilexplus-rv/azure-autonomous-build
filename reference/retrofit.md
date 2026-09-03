@@ -10,6 +10,10 @@ it match the method. Rewriting is how a retrofit turns into a second build.
 
 ## 1. Reconstruct the ledger
 
+**Fetch first, and establish which remote is authoritative** — a project with a mirror or a
+legacy origin has more than one answer to every question below, and the stale one looks exactly as
+convincing as the current one.
+
 What exists, when it landed, and — the question that is always missing — **what built it**:
 
 ```bash
