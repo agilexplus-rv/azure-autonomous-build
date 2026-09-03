@@ -287,6 +287,26 @@ A `verify` script that CI runs, composed of static checks. The ones that earned 
 | `route-coverage` | a route on disk with no deliberate gate decision, **and every internal link resolving to a route that exists** |
 | `i18n` | key parity across locales; a hardcoded user-facing string in a rendered component |
 | `design-rules` | product constraints where being wrong is a legal or safety failure — **never re-baselined** |
+| `dead-code` | an export nothing imports, a route nothing links to, a dependency nothing uses — the mechanical form of "a component with no caller is a stub" |
+| `design-fidelity` | the built interface drifting from the approved reference, with the diffs uploaded as artifacts so a failure is diagnosable without re-running it locally |
+| `a11y` | violations at the smallest supported viewport, in every locale — far cheaper here than as a gate verifier |
+| `budgets` | a measured budget exceeded: page weight, animation cost, query count. A budget nobody enforces is a preference |
+
+### Chokepoint guards — one writer, proved
+
+The cheapest guard in the contract, and the one most often left out. **Any invariant that exactly
+one place may enforce gets a static guard proving nothing else does it.** Enumerate the writers or
+readers of the thing, statically, and fail when the set is larger than the single place allowed.
+
+One build runs four of these, each header-commented *"enforced mechanically"*: only the transition
+function may write a request's status; only the audit primitive may write the audit table; nothing
+reads configuration except through the config service; and a set of legally unsafe phrases must
+never reach generated text. Individually they are that project's requirements. The pattern is not:
+it is what stops a second implementation of a rule drifting into existence three sprints later,
+and it is a static check rather than a review habit.
+
+Write the guard in the same sprint as the mechanism. A chokepoint added afterwards has to prove a
+negative across code that already violates it.
 
 ### Three ways a guard silently stops guarding
 
