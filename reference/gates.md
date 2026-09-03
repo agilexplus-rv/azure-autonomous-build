@@ -86,3 +86,41 @@ unreachable webhook; a signed-URL issuer with no caller; and a primary call-to-a
 a 404.
 
 Every one of those passed CI.
+
+## Prove each guard can fail — with committed fixtures
+
+"Plant a violation" is not a one-off exercise at the moment the guard is written. Commit the
+planted violation: a **clean tree and a violation tree per guard**, so the proof is repeatable by
+anyone and reviewable in a diff. A second build did this from its first sprint — its Sprint 0.1
+goal was literally *the guards exist and each one fails on a planted violation* — and the fixtures
+are what keep it true afterwards.
+
+A guard whose violation fixture stops failing has silently stopped guarding, and that is a finding
+about the guard rather than about the tree it just passed.
+
+## Commit the verdict
+
+The structured verdict is written into the repository, one file per sprint and one per phase, not
+left in a workflow log. "Done" then has a value someone can read six weeks later, the cold-start
+file can point at it, and a claim of DONE has something to be checked against. A verdict that
+exists only in a chat transcript or a CI run is an opinion with a timestamp.
+
+## The CI that carries the gate
+
+The static contract belongs in one fast job; everything slower runs beside it rather than behind
+it. A shape that survived a long build:
+
+| Job | Carries |
+|---|---|
+| **fast** | lint, typecheck, build, unit and integration tests, the whole `verify` contract |
+| **browser** | the journey and accessibility suites, **sharded** across a matrix — the wall-clock lever that keeps the gate affordable |
+| **fidelity** | the design-fidelity check, **uploading its diffs as artifacts on failure** |
+| **acceptance** | the acceptance criteria, as their own job rather than mixed into unit tests |
+| **aggregator** | the required status check, `needs:` all of the above |
+
+Two traps live in that table. The aggregator's name is the one branch protection requires, so
+renaming it blocks every PR in the repository. And **a skipped job counts as passing inside it** —
+so any conditional fast path is a hole the moment a PR touches something it did not expect.
+
+Upload the evidence a failing job produces. A visual diff or a trace that only exists inside a
+finished run costs whoever picks it up a full re-run to see what you already saw.
